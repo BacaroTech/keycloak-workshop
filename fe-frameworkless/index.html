@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" async></script>
+  <title>OIDC Login</title>
+</head>
+
+<body style="width: 100%; margin:0">
+  <div style="margin:10px">
+    <h1>OIDC Login Example</h1>
+    <div style="width:100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 50px 100px;">
+
+      <div style="width: 100%; overflow: hidden;">
+        <button style="width: 100%;" onclick="loginPkce()">Login PKCE</button>
+
+        <a style="width: 100%; display: none;" id="redirect-login-btn-pkce">CLICK HERE</a>
+        <p style="height: fit-content; width: 100%; display: none; word-wrap: break-word;" id="url-pkce"></p>
+      </div>
+      <div style="width: 100%; overflow: hidden;">
+        <button style="width: 100%;" onclick="login()">Login Implicit</button>
+
+        <a style="width: 100%; display: none;" id="redirect-login-btn">CLICK HERE</a>
+        <p style="height: fit-content; width: 100%; display: none; word-wrap: break-word;" id="url"></p>
+      </div>
+
+      <div style="width: 100%; overflow: hidden;">
+        <button style="width: 100%;" onclick="loginCode()">Login Code</button>
+
+        <a style="width: 100%; display: none;" id="redirect-login-btn-code">CLICK HERE</a>
+        <p style="height: fit-content; width: 100%; display: none; word-wrap: break-word;" id="url-code"></p>
+      </div>
+
+      <div style="width: 100%; overflow: hidden;">
+        <button style="width: 100%;">Login implicit 2</button>
+      </div>
+    </div>
+
+    <div>
+      <h1>Risultato</h1>
+      <textarea style="width: 100%;" id="result" rows="5" cols="5">
+
+      </textarea>
+    </div>
+  </div>
+
+
+  <script>
+
+
+    function extractParamsFromImplicitFlow() {
+      try {
+        const indexHash = window.location.hash.indexOf("#")
+        if (indexHash > -1) {
+          const params = window.location.hash.substring(indexHash).split("&").reduce((prev, current) => {
+            if (current.includes("=")) {
+              const splittedParam = current.split("=")
+              return [...prev, {
+                key: splittedParam[0],
+                value: splittedParam[1],
+              }]
+            }
+          }, [])
+          return params;
+        }
+        return null;
+      } catch (error) {
+        console.warn("Error", error);
+        return null;
+      }
+    }
+
+    // Configura i parametri OIDC
+    const authorizationEndpoint = 'http://localhost:8090/realms/siru/protocol/openid-connect/auth'; // URL dell'endpoint di autorizzazione
+
+    const clientId = encodeURIComponent('siru-fe');
+    const redirectUri = encodeURIComponent('http://localhost:8081'); // L'URL a cui il server OIDC reindirizzerà dopo il login
+
+    const responseType = encodeURIComponent('code'); // Utilizza il codice di autorizzazione come tipo di risposta
+    const scope = encodeURIComponent('openid profile email'); // Ambito delle informazioni richieste
+    const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+    function generateRandomString(length) {
+      const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        result += charset.charAt(randomIndex);
+      }
+      return result;
+    }
+
+    async function sha256(buffer) {
+      const data = new TextEncoder().encode(buffer);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return hashBuffer;
+    }
+
+    // Funzione per codificare Base64URL
+    function base64URLEncode(buffer) {
+      const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+      return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+
+    function loginPkce() {
+
+      const codeVerifier = generateRandomString(64);
+      const stateValue = generateRandomString(16);
+      const nonceValue = generateRandomString(16);
+      // Calcola il code_challenge utilizzando SHA-256
+      sha256(codeVerifier)
+        .then(codeChallengeBuffer => {
+          const codeChallenge = base64URLEncode(codeChallengeBuffer);
+
+          // Ora puoi utilizzare il codeChallenge nella tua richiesta di autorizzazione
+          const authorizationUrl = `${authUrl}&state=${stateValue}&nonce=${nonceValue}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+          console.log(authorizationUrl)
+          const redirectBtn = document.getElementById('redirect-login-btn-pkce')
+          if (redirectBtn) {
+            redirectBtn.href = authorizationUrl
+            redirectBtn.style.display = "block"
+          }
+          const p = document.getElementById('url-pkce')
+          if (p) {
+            p.innerHTML = authorizationUrl
+            p.style.display = "block"
+          }
+          // Esegui la tua logica per avviare il processo di autorizzazione
+        })
+        .catch(error => console.error('Errore durante la generazione del code_challenge', error));
+    }
+
+    function login() {
+      // Esempio di generazione di valori per state e nonce
+      const stateValue = generateRandomString(16);
+      const nonceValue = generateRandomString(16);
+      const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${encodeURIComponent('id_token token')}&scope=${scope}`;
+      // Costruisci l'URL di autorizzazione
+      const authorizationUrl = `${authUrl}&state=${stateValue}&nonce=${nonceValue}`;
+      console.log("authUrl", authUrl)
+
+      const redirectBtn = document.getElementById('redirect-login-btn')
+      if (redirectBtn) {
+        redirectBtn.href = authorizationUrl
+        redirectBtn.style.display = "block"
+      }
+      const p = document.getElementById('url')
+      if (p) {
+        p.innerHTML = authorizationUrl
+        p.style.display = "block"
+      }
+
+      // Reindirizza l'utente all'URL di autorizzazione
+
+    }
+
+
+    function loginCode() {
+      // Esempio di generazione di valori per state e nonce
+      const stateValue = generateRandomString(16);
+      const nonceValue = generateRandomString(16);
+      const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${encodeURIComponent('code token')}&scope=${scope}`;
+      // Costruisci l'URL di autorizzazione
+      const authorizationUrl = `${authUrl}&state=${stateValue}&nonce=${nonceValue}`;
+      console.log("authUrl", authUrl)
+
+      const redirectBtn = document.getElementById('redirect-login-btn-code')
+      if (redirectBtn) {
+        redirectBtn.href = authorizationUrl
+        redirectBtn.style.display = "block"
+      }
+      const p = document.getElementById('url-code')
+      if (p) {
+        p.innerHTML = authorizationUrl
+        p.style.display = "block"
+      }
+
+      // Reindirizza l'utente all'URL di autorizzazione
+
+    }
+
+    const paramsImplicitFlow = extractParamsFromImplicitFlow();
+    if (paramsImplicitFlow !== null) {
+      console.log("params implicit", paramsImplicitFlow)
+      document.getElementById('result').value = JSON.stringify(paramsImplicitFlow, null, "\t")
+    } else {
+      // Verifica se c'è un codice di autorizzazione nella query string
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams) {
+        console.log("urlParams", urlParams);
+        const params = [];
+        urlParams.forEach((value, key) => {
+          params.push({
+            key: key,
+            value: value
+          })
+        })
+
+        document.getElementById('result').value = JSON.stringify(params, null, "\t")
+
+      }
+    }
+
+  </script>
+</body>
+
+</html>

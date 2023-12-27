@@ -14,9 +14,9 @@ Benvenuto al workshop su Keycloak! In questo repository troverai tutto il necess
 Questo workshop è progettato per fornire una panoramica completa di Keycloak, una soluzione open-source per la gestione dell'identità e degli accessi. Imparerai come configurare Keycloak, integrarlo nelle tue applicazioni e sfruttare le sue funzionalità avanzate per migliorare la sicurezza e l'esperienza utente.
 
 ## Contenuti del Repository
-- [Installazione](doc\setup.md) Tutti i passi per avviare Keycloak
+- [Installazione](doc/setup.md) Tutti i passi per avviare Keycloak
 - Progetti: Una serie di esempi pratici che illustrano l'integrazione di Keycloak nelle diverse tipologie di applicazioni.
-- [Risorse Aggiuntive](doc\documentation.md): Documentazione, link utili e risorse aggiuntive per approfondire gli argomenti trattati nel workshop.
+- [Risorse Aggiuntive](doc/documentation.md): Documentazione, link utili e risorse aggiuntive per approfondire gli argomenti trattati nel workshop.
 Prerequisiti
 
 ## Prerequisiti

@@ -6,67 +6,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" async></script>
   <title>OIDC Login</title>
+  <style>
+    pre {
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 
 <body style="width: 100%; margin:0">
-  <div style="margin:10px">
+  <div style="margin:10px 2rem 10px 2rem">
 
     <div style="width:100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 50px 100px;">
-      <div style="">
+      <div style="width: 100%;">
         <h1>OIDC Login Standard Flow</h1>
-        <div style="width: 100%; overflow: hidden;">
-          <button style="width: 100%;" onclick="loginStandardFlow()">Generate URL</button>
+        <div
+          style="width: 100%; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 5px">
 
-          <a style="width: 100%; display: none;" id="redirect-login-btn-code">Clicca qui per effettuare la login</a>
-          <label style="height: fit-content; max-width: 400px; display: none; word-wrap: break-all" id="url-code"></label>
+          <button style="width: fit-content; margin: auto" onclick="loginStandardFlow()">Genera URL</button>
 
+          <a style="width: fit-content; display: none;" id="redirect-login-btn-code">Login</a>
+          <div style="width: 100%;">
+            <label style="height: fit-content; display: none; word-break: break-all" id="url-code"></label>
+          </div>
         </div>
         <div>
-          <h1>PATH</h1>
-          <textarea style="width: 100%;" id="url-code-parts" rows="10" cols="8"></textarea>
+          <h1>URL</h1>
+          <pre><code style="width: 100%;" id="url-code-parts"></code></pre>
         </div>
 
         <div>
           <h1>Risultato</h1>
-          <textarea style="width: 100%;" id="result" rows="20" cols="5">
+          <pre><code style="width: 100%;" id="result"></code></pre>
 
-        </textarea>
+          </code>
         </div>
       </div>
-      <div style="">
+      <div style="width: 100%;">
         <h1>OIDC Login Implicit Flow</h1>
-        <div style="width: 100%; overflow: hidden;">
-          <button style="width: 100%;" onclick="loginImplicitFlow()">Generate URL</button>
+        <div
+          style="width: 100%; overflow: hidden; display: flex; flex-direction: column; align-items: center; gap: 5px">
 
-          <a style="width: 100%; display: none;" id="redirect-login-btn-implicit">Clicca qui per effettuare la login via Implicit Flow</a>
-          <p style="height: fit-content; max-width: 400px;; display: none; word-wrap: break-word;" id="url-implicit"></p>
+          <button style="width: fit-content; margin: auto" onclick="loginImplicitFlow()">Genera URL</button>
+
+          <a style="width: fit-content; display: none;" id="redirect-login-btn-implicit">Login</a>
+          <div style="width: 100%;">
+            <label style="height: fit-content; display: none; word-break: break-word;" id="url-implicit">
+            </label>
+          </div>
 
         </div>
         <div>
-          <h1>PATH</h1>
-          <textarea style="width: 100%;" id="url-implicit-parts" rows="10" cols="8"></textarea>
+          <h1>URL</h1>
+
+          <pre>
+            <code style="width: 100%; word-break: break-word;" id="url-implicit-parts">
+            </code>
+          </pre>
         </div>
 
         <div>
-          <h1>Risultato con Implicit Flow</h1>
-          <textarea style="width: 100%;" id="result-implicit" rows="20" cols="5">
-
-        </textarea>
+          <h1>Risultato</h1>
+          <pre><code style="width: 100%; word-break: break-word;" id="result-implicit"></code></pre>
         </div>
       </div>
     </div>
-
   </div>
 
-
   <script>
+    // #### CONFIGURAZIONE ####
+    // URL dell'endpoint di autorizzazione
+    const authorizationEndpoint = 'http://localhost:8090/realms/siru/protocol/openid-connect/auth';
+    // ClientId
+    const clientId = 'siru-fe';
+    // Url di redirect
+    const redirect = 'http://localhost:8081';
+    // scope
+    const scope = 'openid profile email';
+    // Response Type
+    const responseTypeStandardFlow = 'code';
 
+    const responseTypeImplicitFlow = 'token';
 
+    // #### Funzioni di utilità ####
     function extractParamsFromImplicitFlow() {
       try {
         const indexHash = window.location.hash.indexOf("#")
         if (indexHash > -1) {
-          const params = window.location.hash.substring(indexHash).split("&").reduce((prev, current) => {
+          const params = window.location.hash.substring(indexHash + 1).split("&").reduce((prev, current) => {
             if (current.includes("=")) {
               const splittedParam = current.split("=")
               return [...prev, {
@@ -84,8 +110,6 @@
       }
     }
 
-    // const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
-
     function generateRandomString(length) {
       const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
@@ -102,68 +126,30 @@
       return hashBuffer;
     }
 
-    // Funzione per codificare Base64URL
     function base64URLEncode(buffer) {
       const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
       return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     }
-    const typeLogin = localStorage.getItem("login-type")
-    const idResultElement = typeLogin === "implicit" ? "result-implicit" : "result";
 
-    const paramsImplicitFlow = extractParamsFromImplicitFlow();
-    if (paramsImplicitFlow !== null) {
-      console.log("params implicit", paramsImplicitFlow)
-      document.getElementById(idResultElement).value = JSON.stringify(paramsImplicitFlow, null, "\t")
-    } else {
-      // Verifica se c'è un codice di autorizzazione nella query string
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams) {
-        console.log("urlParams", urlParams);
-        const params = [];
-        urlParams.forEach((value, key) => {
-          params.push({
-            key: key,
-            value: value
-          })
-        })
-
-        document.getElementById(idResultElement).value = JSON.stringify(params, null, "\t")
-
-      }
-    }
-
-
-    
+    // #### Funzioni di Login ####
     function loginStandardFlow() {
-      localStorage.setItem("login-type", "code")
 
-      // Configura i parametri OIDC
-
-      // URL dell'endpoint di autorizzazione
-      const authorizationEndpoint = 'http://localhost:8090/realms/siru/protocol/openid-connect/auth';
-      // ClientId
-      const clientId = 'siru-fe';
-      // Url di redirect
-      const redirect = 'http://localhost:8081';
-      // scope
-      const scope = 'openid profile email';
-      // Response Type
-      const responseType = 'code';
+      localStorage.setItem("login-type", "code");
 
       const clientIdUri = encodeURIComponent(clientId);
       const redirectUri = encodeURIComponent(redirect); // L'URL a cui il server OIDC reindirizzerà dopo il login
       const scopeUri = encodeURIComponent(scope); // Ambito delle informazioni richieste
-      const responseTypeUri = encodeURIComponent(responseType);
+      const responseTypeUri = encodeURIComponent(responseTypeStandardFlow);
       const stateValue = generateRandomString(16);
       const nonceValue = generateRandomString(16);
-      const slicePath = {
+      const urlParts = {
         "authorizationEndpoint": authorizationEndpoint,
         "clientId": clientIdUri,
         "redirectUri": redirectUri,
         "scope": scopeUri,
         "responseType": responseTypeUri,
         "stateValue": stateValue,
-        "nonceValue": nonceValue,
+        "nonceValue": nonceValue
       }
       const authUrl = `${authorizationEndpoint}?client_id=${clientIdUri}&redirect_uri=${redirectUri}&response_type=${responseTypeUri}&scope=${scopeUri}`;
       // Costruisci l'URL di autorizzazione
@@ -182,39 +168,30 @@
       }
       const urlCodeParts = document.getElementById('url-code-parts')
       if (urlCodeParts) {
-        urlCodeParts.innerHTML = JSON.stringify(slicePath, null, "\t");
+        urlCodeParts.innerHTML = JSON.stringify(urlParts, null, "\t");
         urlCodeParts.style.display = "block";
       }
-
-      // Reindirizza l'utente all'URL di autorizzazione
-
     }
 
-
     function loginImplicitFlow() {
-
-      localStorage.setItem("login-type", "implicit")
-      // URL dell'endpoint di autorizzazione
-      const authorizationEndpoint = 'http://localhost:8090/realms/siru/protocol/openid-connect/auth';
-      // ClientId
-      const clientId = 'siru-fe';
-      // Url di redirect
-      const redirect = 'http://localhost:8081';
-      // scope
-      const scope = 'openid profile email';
-      // Response Type
-      const responseType = 'token';
-
+      localStorage.setItem("login-type", "implicit");
       const clientIdUri = encodeURIComponent(clientId);
       const redirectUri = encodeURIComponent(redirect); // L'URL a cui il server OIDC reindirizzerà dopo il login
       const scopeUri = encodeURIComponent(scope); // Ambito delle informazioni richieste
-      const responseTypeUri = encodeURIComponent(responseType);
+      const responseTypeUri = encodeURIComponent(responseTypeImplicitFlow);
       const stateValue = generateRandomString(16);
       const nonceValue = generateRandomString(16);
 
+      const urlParts = {
+        "authorizationEndpoint": authorizationEndpoint,
+        "clientId": clientIdUri,
+        "redirectUri": redirectUri,
+        "scope": scopeUri,
+        "responseType": responseTypeUri
+      }
+
       const authUrl = `${authorizationEndpoint}?client_id=${clientIdUri}&redirect_uri=${redirectUri}&response_type=${responseTypeUri}&scope=${scopeUri}`;
-      // Costruisci l'URL di autorizzazione
-      const authorizationUrl = `${authUrl}&state=${stateValue}&nonce=${nonceValue}`;
+      const authorizationUrl = `${authUrl}`;
       console.log("authUrl", authUrl)
 
       const redirectBtn = document.getElementById('redirect-login-btn-implicit')
@@ -227,10 +204,38 @@
         p.innerHTML = authorizationUrl
         p.style.display = "block"
       }
-
-      // Reindirizza l'utente all'URL di autorizzazione
+      const urlCodeParts = document.getElementById('url-implicit-parts')
+      if (urlCodeParts) {
+        urlCodeParts.innerHTML = JSON.stringify(urlParts, null, "\t");
+        urlCodeParts.style.display = "block";
+      }
 
     }
+
+    const typeLogin = localStorage.getItem("login-type")
+
+    const idResultElement = typeLogin === "implicit" ? "result-implicit" : "result";
+
+    const paramsImplicitFlow = extractParamsFromImplicitFlow();
+    
+    if (paramsImplicitFlow !== null) {
+      document.getElementById(idResultElement).innerHTML = JSON.stringify(paramsImplicitFlow, null, "\t");
+    } else {
+      // Verifica se c'è un codice di autorizzazione nella query string
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams) {
+        const params = [];
+        urlParams.forEach((value, key) => {
+          params.push({
+            key: key,
+            value: value
+          })
+        })
+
+        document.getElementById(idResultElement).innerHTML = JSON.stringify(params, null, "\t")
+      }
+    }
+
   </script>
 </body>
 

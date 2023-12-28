@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Password Grant Type",
+			"name": "Direct access grants - Password Grant Type",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -33,24 +33,6 @@
 							"key": "password",
 							"value": "admin",
 							"type": "text"
-						},
-						{
-							"key": "client_secret",
-							"value": "UtPRD7xS1K91XleFUh7gaZaWKaiDSW9T",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "code",
-							"value": "cd8e2638-2303-448a-b339-03d11890c8a5.2822ce0d-35dc-45df-bb95-935e2990556c.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "redirect_uri",
-							"value": "http://localhost:8081",
-							"type": "text",
-							"disabled": true
 						}
 					]
 				},
@@ -167,20 +149,8 @@
 						},
 						{
 							"key": "client_secret",
-							"value": "CNNxQx7MRsVF3x4oxErCFvYyv3fu8zoK",
+							"value": "LUGudq80cZB3zA7LuZbEtGsT5qu8TyoH",
 							"type": "text"
-						},
-						{
-							"key": "code",
-							"value": "62f402ff-dc9c-49ec-8728-eea335632244.1f5c465c-9406-46e0-bcb7-0ee16cfc4301.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "redirect_uri",
-							"value": "http://localhost:8081",
-							"type": "text",
-							"disabled": true
 						},
 						{
 							"key": "scope",
@@ -226,26 +196,8 @@
 							"type": "text"
 						},
 						{
-							"key": "username",
-							"value": "michele",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "admin",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "client_secret",
-							"value": "OvDTEWyyYG9VmakfRrrtx3XEK5ho1WJ3",
-							"type": "text",
-							"disabled": true
-						},
-						{
 							"key": "code",
-							"value": "62f402ff-dc9c-49ec-8728-eea335632244.1f5c465c-9406-46e0-bcb7-0ee16cfc4301.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
+							"value": "236e5441-f6f0-4971-9f13-e6b16b3dd9b0.458c1550-c38d-471d-81d3-9d69430f17c1.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
 							"type": "text"
 						},
 						{

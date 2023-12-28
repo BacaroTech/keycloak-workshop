@@ -1,10 +1,11 @@
 ## Workshop su Keycloak
 Bacari in action!
 
-## Premessa
+## Michele di BacaroTech
 
-Ciao, sono Michele del team BacaroTech e oggi vi parlerò di Keycloak, e se vorrai potrai fare qualche prova keycloak. 
-Tranquillo, arriveranno tutte le risposte. Prima di cominciare veramente, ti dico un segreto. Penso di non aver mai trovato una guida tech che poi funzionasse veramente. C'è SEMPRE qualcosa che non va per questo ti invito a scriverci o ad aprire una issue che assieme troveremo la soluzione. Ci trovi qui: [bacarotech](https://bacarotech.github.io/). Bene...
+Ciao, sono Michele del team BacaroTech e questa è una guida su keycloak, frutto di esperienze, studio e sperimentazioni. Se vorrai potrai provare e sperimentare anche tu.
+
+Prima di cominciare, ti dico un piccolo segreto. Penso di non aver mai trovato una guida tech che poi funzionasse veramente. C'è SEMPRE qualcosa che non va per questo ti invito a scriverci o ad aprire una issue che assieme troveremo la soluzione. Ci trovi qui: [bacarotech](https://bacarotech.github.io/). Bene...
 
 
 ## Workshop su Keycloak
@@ -15,9 +16,21 @@ Questo workshop è progettato per fornire una panoramica completa di Keycloak, u
 
 ## Contenuti del Repository
 - [Installazione](doc/setup.md) Tutti i passi per avviare Keycloak
-- Progetti: Una serie di esempi pratici che illustrano l'integrazione di Keycloak nelle diverse tipologie di applicazioni.
+- Progetti: Attraverso i workshop impareremo a conoscere, integrare e gestire Keycloak.
 - [Risorse Aggiuntive](doc/documentation.md): Documentazione, link utili e risorse aggiuntive per approfondire gli argomenti trattati nel workshop.
-Prerequisiti
+
+#### Progetti:
+- [Workshop 1 Configurazione](doc/workshop1.md)
+- [Workshop 2 Integrazione FE - Angular](doc/workshop2.md)
+- [Workshop 3 Integrazione BE - Spring Boot](doc/workshop3.md)
+- [Workshop 4 Custom theme](doc/workshop4.md)
+
+#### Prossimi progetti: (non esattamente in questo ordine)
+- Workshop Integrazione FE - React: Coming Soon...
+- Workshop Integrazione BE - Node: Coming Soon...
+- Workshop SSO: Coming Soon...
+- Workshop Cloud: Coming Soon...
+- Workshop ALL-IN: Coming Soon...
 
 ## Prerequisiti
 - Keycloak (ovviamente)

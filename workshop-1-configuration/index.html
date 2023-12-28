@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" async></script>
+  <title>OIDC Login</title>
+</head>
+
+<body style="width: 100%; margin:0">
+  <div style="margin:10px">
+
+    <div style="width:100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 50px 100px;">
+      <div style="">
+        <h1>OIDC Login Standard Flow</h1>
+        <div style="width: 100%; overflow: hidden;">
+          <button style="width: 100%;" onclick="loginStandardFlow()">Generate URL</button>
+
+          <a style="width: 100%; display: none;" id="redirect-login-btn-code">Clicca qui per effettuare la login</a>
+          <label style="height: fit-content; max-width: 400px; display: none; word-wrap: break-all" id="url-code"></label>
+
+        </div>
+        <div>
+          <h1>PATH</h1>
+          <textarea style="width: 100%;" id="url-code-parts" rows="10" cols="8"></textarea>
+        </div>
+
+        <div>
+          <h1>Risultato</h1>
+          <textarea style="width: 100%;" id="result" rows="20" cols="5">
+
+        </textarea>
+        </div>
+      </div>
+      <div style="">
+        <h1>OIDC Login Implicit Flow</h1>
+        <div style="width: 100%; overflow: hidden;">
+          <button style="width: 100%;" onclick="loginImplicitFlow()">Generate URL</button>
+
+          <a style="width: 100%; display: none;" id="redirect-login-btn-implicit">Clicca qui per effettuare la login via Implicit Flow</a>
+          <p style="height: fit-content; max-width: 400px;; display: none; word-wrap: break-word;" id="url-implicit"></p>
+
+        </div>
+        <div>
+          <h1>PATH</h1>
+          <textarea style="width: 100%;" id="url-implicit-parts" rows="10" cols="8"></textarea>
+        </div>
+
+        <div>
+          <h1>Risultato con Implicit Flow</h1>
+          <textarea style="width: 100%;" id="result-implicit" rows="20" cols="5">
+
+        </textarea>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script>
+
+
+    function extractParamsFromImplicitFlow() {
+      try {
+        const indexHash = window.location.hash.indexOf("#")
+        if (indexHash > -1) {
+          const params = window.location.hash.substring(indexHash).split("&").reduce((prev, current) => {
+            if (current.includes("=")) {
+              const splittedParam = current.split("=")
+              return [...prev, {
+                key: splittedParam[0],
+                value: splittedParam[1],
+              }]
+            }
+          }, [])
+          return params;
+        }
+        return null;
+      } catch (error) {
+        console.warn("Error", error);
+        return null;
+      }
+    }
+
+    // const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+    function generateRandomString(length) {
+      const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        result += charset.charAt(randomIndex);
+      }
+      return result;
+    }
+
+    async function sha256(buffer) {
+      const data = new TextEncoder().encode(buffer);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return hashBuffer;
+    }
+
+    // Funzione per codificare Base64URL
+    function base64URLEncode(buffer) {
+      const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+      return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+    const typeLogin = localStorage.getItem("login-type")
+    const idResultElement = typeLogin === "implicit" ? "result-implicit" : "result";
+
+    const paramsImplicitFlow = extractParamsFromImplicitFlow();
+    if (paramsImplicitFlow !== null) {
+      console.log("params implicit", paramsImplicitFlow)
+      document.getElementById(idResultElement).value = JSON.stringify(paramsImplicitFlow, null, "\t")
+    } else {
+      // Verifica se c'è un codice di autorizzazione nella query string
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams) {
+        console.log("urlParams", urlParams);
+        const params = [];
+        urlParams.forEach((value, key) => {
+          params.push({
+            key: key,
+            value: value
+          })
+        })
+
+        document.getElementById(idResultElement).value = JSON.stringify(params, null, "\t")
+
+      }
+    }
+
+
+    
+    function loginStandardFlow() {
+      localStorage.setItem("login-type", "code")
+
+      // Configura i parametri OIDC
+
+      // URL dell'endpoint di autorizzazione
+      const authorizationEndpoint = 'http://localhost:8090/realms/siru/protocol/openid-connect/auth';
+      // ClientId
+      const clientId = 'siru-fe';
+      // Url di redirect
+      const redirect = 'http://localhost:8081';
+      // scope
+      const scope = 'openid profile email';
+      // Response Type
+      const responseType = 'code';
+
+      const clientIdUri = encodeURIComponent(clientId);
+      const redirectUri = encodeURIComponent(redirect); // L'URL a cui il server OIDC reindirizzerà dopo il login
+      const scopeUri = encodeURIComponent(scope); // Ambito delle informazioni richieste
+      const responseTypeUri = encodeURIComponent(responseType);
+      const stateValue = generateRandomString(16);
+      const nonceValue = generateRandomString(16);
+      const slicePath = {
+        "authorizationEndpoint": authorizationEndpoint,
+        "clientId": clientIdUri,
+        "redirectUri": redirectUri,
+        "scope": scopeUri,
+        "responseType": responseTypeUri,
+        "stateValue": stateValue,
+        "nonceValue": nonceValue,
+      }
+      const authUrl = `${authorizationEndpoint}?client_id=${clientIdUri}&redirect_uri=${redirectUri}&response_type=${responseTypeUri}&scope=${scopeUri}`;
+      // Costruisci l'URL di autorizzazione
+      const authorizationUrl = `${authUrl}&state=${stateValue}&nonce=${nonceValue}`;
+      console.log("authUrl", authUrl)
+
+      const redirectBtn = document.getElementById('redirect-login-btn-code')
+      if (redirectBtn) {
+        redirectBtn.href = authorizationUrl;
+        redirectBtn.style.display = "block";
+      }
+      const p = document.getElementById('url-code')
+      if (p) {
+        p.innerHTML = authorizationUrl;
+        p.style.display = "block";
+      }
+      const urlCodeParts = document.getElementById('url-code-parts')
+      if (urlCodeParts) {
+        urlCodeParts.innerHTML = JSON.stringify(slicePath, null, "\t");
+        urlCodeParts.style.display = "block";
+      }
+
+      // Reindirizza l'utente all'URL di autorizzazione
+
+    }
+
+
+    function loginImplicitFlow() {
+
+      localStorage.setItem("login-type", "implicit")
+      // URL dell'endpoint di autorizzazione
+      const authorizationEndpoint = 'http://localhost:8090/realms/siru/protocol/openid-connect/auth';
+      // ClientId
+      const clientId = 'siru-fe';
+      // Url di redirect
+      const redirect = 'http://localhost:8081';
+      // scope
+      const scope = 'openid profile email';
+      // Response Type
+      const responseType = 'token';
+
+      const clientIdUri = encodeURIComponent(clientId);
+      const redirectUri = encodeURIComponent(redirect); // L'URL a cui il server OIDC reindirizzerà dopo il login
+      const scopeUri = encodeURIComponent(scope); // Ambito delle informazioni richieste
+      const responseTypeUri = encodeURIComponent(responseType);
+      const stateValue = generateRandomString(16);
+      const nonceValue = generateRandomString(16);
+
+      const authUrl = `${authorizationEndpoint}?client_id=${clientIdUri}&redirect_uri=${redirectUri}&response_type=${responseTypeUri}&scope=${scopeUri}`;
+      // Costruisci l'URL di autorizzazione
+      const authorizationUrl = `${authUrl}&state=${stateValue}&nonce=${nonceValue}`;
+      console.log("authUrl", authUrl)
+
+      const redirectBtn = document.getElementById('redirect-login-btn-implicit')
+      if (redirectBtn) {
+        redirectBtn.href = authorizationUrl
+        redirectBtn.style.display = "block"
+      }
+      const p = document.getElementById('url-implicit')
+      if (p) {
+        p.innerHTML = authorizationUrl
+        p.style.display = "block"
+      }
+
+      // Reindirizza l'utente all'URL di autorizzazione
+
+    }
+  </script>
+</body>
+
+</html>

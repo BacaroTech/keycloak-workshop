@@ -1,0 +1,277 @@
+{
+	"info": {
+		"_postman_id": "a5c2cc0b-eb3f-4e1b-b296-2b12bdb0c8e2",
+		"name": "Keycloak-workshop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19054078"
+	},
+	"item": [
+		{
+			"name": "Password Grant Type",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "siru-fe",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "michele",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "UtPRD7xS1K91XleFUh7gaZaWKaiDSW9T",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "code",
+							"value": "cd8e2638-2303-448a-b339-03d11890c8a5.2822ce0d-35dc-45df-bb95-935e2990556c.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8081",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/realms/siru/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"realms",
+						"siru",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Standard Flow + Client authentication",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "siru-fe",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "michele",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_secret",
+							"value": "OvDTEWyyYG9VmakfRrrtx3XEK5ho1WJ3",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "62f402ff-dc9c-49ec-8728-eea335632244.1f5c465c-9406-46e0-bcb7-0ee16cfc4301.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8081",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/realms/siru/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"realms",
+						"siru",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Service accounts roles",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "siru-fe",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "michele",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "CNNxQx7MRsVF3x4oxErCFvYyv3fu8zoK",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "62f402ff-dc9c-49ec-8728-eea335632244.1f5c465c-9406-46e0-bcb7-0ee16cfc4301.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8081",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "scope",
+							"value": "openid profile email",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/realms/siru/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"realms",
+						"siru",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Standard Flow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "siru-fe",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "michele",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_secret",
+							"value": "OvDTEWyyYG9VmakfRrrtx3XEK5ho1WJ3",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "code",
+							"value": "62f402ff-dc9c-49ec-8728-eea335632244.1f5c465c-9406-46e0-bcb7-0ee16cfc4301.d637b91c-e09e-4bd0-97ee-0567f82d6a4d",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8081",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8090/realms/siru/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"realms",
+						"siru",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

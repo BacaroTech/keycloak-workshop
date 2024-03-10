@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "style": "npx tailwindcss -i ./src/input.css -o ./login/resources/assets/output.css --watch",
+    "style-demo": "npx tailwindcss -i ./src/input.css -o ./output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

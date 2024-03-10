@@ -49,8 +49,8 @@
     </#if>
 </head>
 
-<body class="${properties.kcBodyClass!}">
-<div class="${properties.kcLoginClass!}">
+<body>
+<div class="flex min-h-full flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
     <div class="${properties.kcFormCardClass!}">
         <header class="">
             <h3 id=""><#nested "header"></h3>

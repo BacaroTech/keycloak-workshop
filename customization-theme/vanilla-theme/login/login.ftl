@@ -9,10 +9,24 @@
                 <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
                     <#if !usernameHidden??>
                         <div class="${properties.kcFormGroupClass!}">
-                            <label for="username" class="${properties.kcLabelClass!}"><#if !realm.loginWithEmailAllowed>${msg("username")}<#elseif !realm.registrationEmailAsUsername>${msg("usernameOrEmail")}<#else>${msg("email")}</#if></label>
+                            <label for="username" class="">
+                                <#if !realm.loginWithEmailAllowed>
+                                ${msg("username")}
+                                <#elseif !realm.registrationEmailAsUsername>
+                                ${msg("usernameOrEmail")}
+                                <#else>
+                                ${msg("email")}
+                                </#if>
+                            </label>
 
-                            <input tabindex="1" id="username" class="${properties.kcInputClass!}" name="username" value="${(login.username!'')}"  type="text" autofocus autocomplete="off"
-                                   aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>"
+                            <input 
+                                tabindex="1" 
+                                id="username"
+                                class="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                name="username" value="${(login.username!'')}" 
+                                type="text" 
+                                autofocus autocomplete="off"
+                                aria-invalid="<#if messagesPerField.existsError('username','password')>true</#if>"
                             />
 
                             <#if messagesPerField.existsError('username','password')>

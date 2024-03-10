@@ -13,6 +13,10 @@
         </#list>
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+
     <link rel="icon" href="${url.resourcesPath}/img/favicon.ico" />
     <#if properties.stylesCommon?has_content>
         <#list properties.stylesCommon?split(' ') as style>
@@ -45,9 +49,11 @@
             );
         </script>
     </#if>
+
 </head>
 
 <body class="${properties.kcBodyClass!}">
+<nav id="root"></nav>
 <div class="${properties.kcLoginClass!}">
     <div id="kc-header" class="${properties.kcHeaderClass!}">
         <div id="kc-header-wrapper"
@@ -160,6 +166,19 @@
 
     </div>
   </div>
+
+<script type="text/babel">
+  // Define a component called Greetings
+  function Greetings() {
+    return <h1>Hello, This is a react component in Keycloak Login !</h1>;
+  }
+
+  // Render the component to the DOM
+  ReactDOM.render(
+    <Greetings />,
+    document.getElementById("root")
+  );
+</script>
 </body>
 </html>
 </#macro>

@@ -21,8 +21,9 @@ services:
       - postgresdb
     networks:
       - back
-    # volumes:
-    #   - ./my-theme/:/opt/keycloak/themes/my-theme/
+    volumes:
+      - ./customization-theme/vanilla-theme/:/opt/keycloak/themes/vanilla-theme/
+      - ./customization-theme/keywind-theme/:/opt/keycloak/themes/keywind-theme/
 
   postgresdb:
     image: postgres:15.2-alpine

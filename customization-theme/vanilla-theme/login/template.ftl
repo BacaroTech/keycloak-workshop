@@ -14,6 +14,7 @@
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
     <link rel="icon" href="${url.resourcesPath}/img/favicon.ico" />
+
     <#if properties.stylesCommon?has_content>
         <#list properties.stylesCommon?split(' ') as style>
             <link href="${url.resourcesCommonPath}/${style}" rel="stylesheet" />
@@ -34,6 +35,7 @@
             <script src="${script}" type="text/javascript"></script>
         </#list>
     </#if>
+    
     <#if authenticationSession??>
         <script type="module">
             import { checkCookiesAndSetTimer } from "${url.resourcesPath}/js/authChecker.js";

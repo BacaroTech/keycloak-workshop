@@ -1,0 +1,15 @@
+{
+  "name": "react-theme",
+  "version": "1.0.0",
+  "description": "Here you can see how to customize your keycloak theme\r ## Inject React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

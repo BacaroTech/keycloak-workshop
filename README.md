@@ -2,7 +2,7 @@
 
 Ciao, sono Michele del team BacaroTech e questa è una guida su keycloak, frutto di esperienze, studio e sperimentazioni. Se vorrai potrai provare e sperimentare anche tu.
 
-Prima di cominciare, ti dico un piccolo segreto. Penso di non aver mai trovato una guida tech che poi funzionasse veramente. C'è SEMPRE qualcosa che non va per questo ti invito a scriverci o ad aprire una issue che assieme troveremo la soluzione. Ci trovi qui: [bacarotech](https://bacarotech.github.io/). Bene...
+Prima di cominciare, ti dico un piccolo segreto. Penso di non aver mai trovato una guida tech che poi funzionasse veramente. C'è SEMPRE qualcosa che non va per questo ti invito a scriverci o ad aprire una issue che assieme troveremo la soluzione.
 
 ## Workshop su Keycloak
 Benvenuto al workshop su Keycloak! In questo repository troverai tutto il necessario per partecipare al workshop e imparare a utilizzare Keycloak per gestire l'autenticazione e l'autorizzazione nelle tue applicazioni.

@@ -1,12 +1,8 @@
-## Workshop su Keycloak
-Bacari in action!
-
-## Michele di BacaroTech
+## Workshop su Keycloak By Michele
 
 Ciao, sono Michele del team BacaroTech e questa è una guida su keycloak, frutto di esperienze, studio e sperimentazioni. Se vorrai potrai provare e sperimentare anche tu.
 
 Prima di cominciare, ti dico un piccolo segreto. Penso di non aver mai trovato una guida tech che poi funzionasse veramente. C'è SEMPRE qualcosa che non va per questo ti invito a scriverci o ad aprire una issue che assieme troveremo la soluzione. Ci trovi qui: [bacarotech](https://bacarotech.github.io/). Bene...
-
 
 ## Workshop su Keycloak
 Benvenuto al workshop su Keycloak! In questo repository troverai tutto il necessario per partecipare al workshop e imparare a utilizzare Keycloak per gestire l'autenticazione e l'autorizzazione nelle tue applicazioni.
@@ -46,6 +42,12 @@ Questo workshop è progettato per fornire una panoramica completa di Keycloak, u
 ## Feedback e Contributi
 Siamo interessati al tuo feedback! Se incontri problemi o hai suggerimenti per migliorare il workshop, apri una issue o invia una pull request.
 
-[bacarotech](https://bacarotech.github.io/)
-
 Buon apprendimento!
+
+## Social e Contatti
+- 🌳 [Link Tree Homemade](https://bacarotech.github.io/)
+- 📷 [Instagram](https://www.instagram.com/bacarotech23/)
+- 🎵 [TikTok](https://www.tiktok.com/@bacarotech)
+- 🎥 [Youtube](https://www.youtube.com/@Bacarotech)
+- 📫 Email: **bacarotech@gmail.com**
+
